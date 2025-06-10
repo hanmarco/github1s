@@ -100,6 +100,6 @@ const createImportMapScript = () => {
 
 export const createGlobalScript = (staticDir, devVscode) => {
 	return `globalThis.dynamicImport = (url) => import(url);
-			globalThis._VSCODE_FILE_ROOT = new URL('/${staticDir}/vscode/', window.location.origin).toString();
-			${devVscode ? createImportMapScript() : ''}`;
+                       globalThis._VSCODE_FILE_ROOT = new URL('${staticDir}/vscode/', window.location.href).toString();
+                       ${devVscode ? createImportMapScript() : ''}`;
 };
