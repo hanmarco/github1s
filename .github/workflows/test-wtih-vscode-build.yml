@@ -1,0 +1,32 @@
+name: Build & Test with VS Code build
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        os: [macos-14]
+        node-version: [20.x]
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          cache: 'npm'
+          node-version: ${{ matrix.node-version }}
+
+      - run: npm install && cd vscode-web && npm install
+      - run: cd vscode-web && npm run build
+      - run: npm run link && npm run build
+      - uses: microsoft/playwright-github-action@v1
+      - run: GITHUB_TOKEN=${{ secrets.GITHUB_TOKEN }} npm run test:ci
