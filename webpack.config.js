@@ -53,7 +53,7 @@ export default (env, argv) => {
 	return {
 		mode: env.mode || 'production',
 		entry: path.resolve(import.meta.dirname, 'src/index.ts'),
-		output: { clean: true, publicPath: '/', filename: `${staticDir}/bootstrap.js` },
+		output: { clean: true, publicPath: '', filename: `${staticDir}/bootstrap.js` },
 		resolve: { extensions: ['.js', '.ts'] },
 		module: {
 			rules: [

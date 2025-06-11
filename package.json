@@ -4,7 +4,8 @@
   "description": "",
   "type": "module",
   "scripts": {
-    "build": "node scripts/build.js",
+    "build:extensions": "npm --prefix extensions/github1s run compile && npm --prefix extensions/elm-web run compile && npm --prefix extensions/nim-web run compile && npm --prefix extensions/ocaml-web run compile && npm --prefix extensions/vlang-web run compile",
+    "build": "npm run build:extensions && npx webpack --mode=production",
     "watch": "rm -rf dist && run-p watch:*",
     "watch:dev-server": "webpack serve --mode=development",
     "watch:github1s-extension": "cd extensions/github1s && npm run watch",
