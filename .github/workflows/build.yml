@@ -28,5 +28,6 @@ jobs:
       - run: npm install
       - run: npm run eslint
       - run: npm run build
-      - uses: microsoft/playwright-github-action@v1
+      - name: Install Playwright
+        run: npx playwright install --with-deps
       - run: GITHUB_TOKEN=${{ secrets.GITHUB_TOKEN }} npm run test:ci
