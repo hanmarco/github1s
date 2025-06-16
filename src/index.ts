@@ -11,7 +11,11 @@ import { createVSCodeWebConfig, createWorkbenchOptions, Platform } from './confi
 
 const resolvePlatformState = (): [Platform, string] => {
 	const hostname = window.location.hostname;
-	const pathParts = window.location.pathname.split('/').filter(Boolean);
+	let pathParts = window.location.pathname.split('/').filter(Boolean);
+
+	if (hostname.endsWith('github.io') && pathParts[0] === 'github1s') {
+		pathParts = pathParts.slice(1);
+	}
 
 	if (hostname.match(/^(.*\.)?gitlab1s\.com$/i)) {
 		const dashIndex = pathParts.indexOf('-');
@@ -30,7 +34,8 @@ const resolvePlatformState = (): [Platform, string] => {
 		return [Platform.npm, repository];
 	}
 
-	const repository = pathParts.slice(0, 2).join('/');
+	let repository = pathParts.slice(0, 2).join('/');
+	repository = repository || 'conwnet/github1s';
 	return [Platform.GitHub, repository];
 };
 
