@@ -4,9 +4,9 @@
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no" />
 		<title>GitHub1s</title>
-		<link rel="icon" media="(prefers-color-scheme:light)" href="/favicon-light.svg" type="image/svg+xml" />
-		<link rel="icon" media="(prefers-color-scheme:dark)" href="/favicon-dark.svg" type="image/svg+xml" />
-		<link rel="manifest" href="/manifest.json" />
+		<link rel="icon" media="(prefers-color-scheme:light)" href="<%= htmlWebpackPlugin.options.publicPath %>favicon-light.svg" type="image/svg+xml" />
+		<link rel="icon" media="(prefers-color-scheme:dark)" href="<%= htmlWebpackPlugin.options.publicPath %>favicon-dark.svg" type="image/svg+xml" />
+		<link rel="manifest" href="<%= htmlWebpackPlugin.options.publicPath %>manifest.json" />
 		<style><%= spinnerStyle %></style>
 		<script><%= pageTitleScript %></script>
 		<script><%= globalScript %></script>
