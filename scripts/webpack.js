@@ -101,7 +101,33 @@ const createImportMapScript = () => {
 export const createGlobalScript = (staticDir, devVscode) => {
 	// GitHub Pages를 위한 base path 설정
 	const basePath = process.env.NODE_ENV === 'production' ? '/github1s' : '';
+
+	// GitHub Pages에서 Service Worker 비활성화
+	const serviceWorkerDisableScript =
+		process.env.NODE_ENV === 'production'
+			? `
+		// GitHub Pages에서 Service Worker 비활성화
+		if (window.location.hostname === 'hanmarco.github.io') {
+			Object.defineProperty(navigator, 'serviceWorker', {
+				get: function() {
+					return {
+						register: function() {
+							return Promise.resolve({
+								unregister: function() { return Promise.resolve(); }
+							});
+						},
+						addEventListener: function() {},
+						removeEventListener: function() {},
+						controller: null
+					};
+				}
+			});
+		}
+	`
+			: '';
+
 	return `globalThis.dynamicImport = (url) => import(url);
 			globalThis._VSCODE_FILE_ROOT = new URL('${basePath}/${staticDir}/vscode/', window.location.origin).toString();
+			${serviceWorkerDisableScript}
 			${devVscode ? createImportMapScript() : ''}`;
 };

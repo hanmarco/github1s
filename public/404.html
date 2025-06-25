@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Page Not Found</title>
+    <script>
+        // Service Worker 요청 처리
+        if (window.location.pathname.includes('service-worker.js')) {
+            // Service Worker를 비활성화하고 빈 응답 반환
+            window.location.href = '/';
+            return;
+        }
+        
+        // GitHub Pages에서 SPA 라우팅 처리
+        const path = window.location.pathname;
+        if (path.startsWith('/github1s/')) {
+            // GitHub1s 경로로 리다이렉트
+            window.location.href = path;
+        } else {
+            // 기본 페이지로 리다이렉트
+            window.location.href = '/github1s/';
+        }
+    </script>
+</head>
+<body>
+    <h1>Page Not Found</h1>
+    <p>Redirecting...</p>
+</body>
+</html> 

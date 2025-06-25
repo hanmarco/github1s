@@ -94,6 +94,8 @@ export default (env, argv) => {
 				GITLAB_ORIGIN: JSON.stringify(process.env.GITLAB_DOMAIN || 'https://gitlab.com'),
 				GITHUB1S_EXTENSIONS: JSON.stringify(packUtils.getBuiltinExtensions(devVscode)),
 				AVAILABLE_LANGUAGES: JSON.stringify(availableLanguages),
+				// GitHub Pages에서 Service Worker 비활성화
+				DISABLE_SERVICE_WORKER: JSON.stringify(process.env.NODE_ENV === 'production'),
 			}),
 		],
 		performance: false,
