@@ -123,6 +123,38 @@ npm install
 npm run build
 ```
 
+## GitHub Pages 배포
+
+GitHub Pages에 배포하려면 다음 단계를 따르세요:
+
+### 1. 자동 배포 (권장)
+
+GitHub Actions를 사용한 자동 배포가 설정되어 있습니다. `main` 브랜치에 푸시하면 자동으로 배포됩니다.
+
+### 2. 수동 배포
+
+```bash
+# GitHub Pages용 빌드
+npm run build:github-pages
+
+# 빌드 검증
+npm run verify-build
+```
+
+### 3. GitHub Pages 설정
+
+1. GitHub 저장소의 Settings > Pages로 이동
+2. Source를 "GitHub Actions"로 설정
+3. 배포된 사이트는 `https://hanmarco.github.io/github1s/`에서 확인 가능
+
+### 4. 문제 해결
+
+만약 404 에러가 발생한다면:
+
+1. 빌드가 올바르게 완료되었는지 확인: `npm run verify-build`
+2. `dist` 폴더에 모든 파일이 있는지 확인
+3. GitHub Actions 로그에서 오류 확인
+
 ## Feedback
 
 - If something is not working, [create an issue](https://github.com/conwnet/github1s/issues/new)
@@ -139,7 +171,7 @@ The continued development and maintenance of GitHub1s is made possible by these 
 
 ## Partners
 
-We are partnered with [OSS Insight](https://ossinsight.io/?utm_source=github1s&utm_medium=github&utm_campaign=ghtrending) to get the Trending Repositories & some more Interesting Analytics. [OSS Insight](https://ossinsight.io/?utm_source=github1s&utm_medium=github&utm_campaign=ghtrending) provides deep insights into GitHub repos, developers, and curated repo lists from billions of GitHub events. It’s built with [TiDB Cloud](https://www.pingcap.com/tidb-cloud/?utm_source=github1s&utm_medium=github&utm_campaign=ghtrending).
+We are partnered with [OSS Insight](https://ossinsight.io/?utm_source=github1s&utm_medium=github&utm_campaign=ghtrending) to get the Trending Repositories & some more Interesting Analytics. [OSS Insight](https://ossinsight.io/?utm_source=github1s&utm_medium=github&utm_campaign=ghtrending) provides deep insights into GitHub repos, developers, and curated repo lists from billions of GitHub events. It's built with [TiDB Cloud](https://www.pingcap.com/tidb-cloud/?utm_source=github1s&utm_medium=github&utm_campaign=ghtrending).
 
 <table><tbody><tr>
 <td><a href="https://ossinsight.io/?utm_source=github1s&utm_medium=github&utm_campaign=ghtrending">

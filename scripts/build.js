@@ -12,7 +12,14 @@ const main = () => {
 			executeCommand('npm', ['run', 'compile'], extensionPath);
 		}
 	}
-	executeCommand('npx', ['webpack', '--mode=production'], PROJECT_ROOT);
+
+	// 환경 변수를 webpack에 전달
+	const env = { ...process.env };
+	if (process.env.NODE_ENV === 'production') {
+		env.NODE_ENV = 'production';
+	}
+
+	executeCommand('npx', ['webpack', '--mode=production'], PROJECT_ROOT, env);
 };
 
 main();

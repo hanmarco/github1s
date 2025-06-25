@@ -99,7 +99,9 @@ const createImportMapScript = () => {
 };
 
 export const createGlobalScript = (staticDir, devVscode) => {
+	// GitHub Pages를 위한 base path 설정
+	const basePath = process.env.NODE_ENV === 'production' ? '/github1s' : '';
 	return `globalThis.dynamicImport = (url) => import(url);
-			globalThis._VSCODE_FILE_ROOT = new URL('/${staticDir}/vscode/', window.location.origin).toString();
+			globalThis._VSCODE_FILE_ROOT = new URL('${basePath}/${staticDir}/vscode/', window.location.origin).toString();
 			${devVscode ? createImportMapScript() : ''}`;
 };

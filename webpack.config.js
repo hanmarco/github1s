@@ -50,12 +50,17 @@ export default (env, argv) => {
 	const minifyJS = (code) => (devMode ? code : UglifyJS.minify(code).code);
 	const availableLanguages = devVscode ? [] : fs.readdirSync(path.join(vscodeWebPath, 'nls'));
 
-	const publicPath = process.env.PUBLIC_URL || '/';
+	// GitHub Pages를 위한 publicPath 설정
+	const publicPath = process.env.PUBLIC_URL || (process.env.NODE_ENV === 'production' ? '/github1s/' : '/');
 
 	return {
 		mode: env.mode || 'production',
 		entry: path.resolve(import.meta.dirname, 'src/index.ts'),
-		output: { clean: true, publicPath, filename: `${staticDir}/bootstrap.js` },
+		output: {
+			clean: true,
+			publicPath,
+			filename: `${staticDir}/bootstrap.js`,
+		},
 		resolve: { extensions: ['.js', '.ts'] },
 		module: {
 			rules: [
