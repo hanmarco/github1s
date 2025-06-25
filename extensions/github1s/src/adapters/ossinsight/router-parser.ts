@@ -25,27 +25,27 @@ export class OSSInsightRouterParser extends GitHub1sRouterParser {
 		return { pageType, repo: '', ref: '', filePath };
 	}
 
-	buildTreePath(repo: string, ref?: string, filePath?: string) {
+	async buildTreePath(repo: string, ref?: string, filePath?: string) {
 		return repo ? super.buildTreePath(repo, ref, filePath) : '/';
 	}
 
-	buildBlobPath(repo: string, ref: string, filePath: string, startLine?: number, endLine?: number) {
+	async buildBlobPath(repo: string, ref: string, filePath: string, startLine?: number, endLine?: number) {
 		return repo ? super.buildBlobPath(repo, ref, filePath, startLine, endLine) : '/';
 	}
 
-	buildCommitListPath(repo: string) {
+	async buildCommitListPath(repo: string) {
 		return repo ? super.buildCommitListPath(repo) : '/';
 	}
 
-	buildCommitPath(repo: string, commitSha: string) {
+	async buildCommitPath(repo: string, commitSha: string) {
 		return repo ? super.buildCommitPath(repo, commitSha) : '/';
 	}
 
-	buildCodeReviewListPath(repo: string) {
+	async buildCodeReviewListPath(repo: string) {
 		return repo ? super.buildCodeReviewListPath(repo) : '/';
 	}
 
-	buildCodeReviewPath(repo: string, codeReviewId: string) {
+	async buildCodeReviewPath(repo: string, codeReviewId: string) {
 		return repo ? super.buildCodeReviewPath(repo, codeReviewId) : '/';
 	}
 }

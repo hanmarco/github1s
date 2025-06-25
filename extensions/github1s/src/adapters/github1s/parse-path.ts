@@ -13,10 +13,21 @@ import { getBrowserUrl } from '@/helpers/context';
 
 export const DEFAULT_REPO = 'conwnet/github1s';
 
+// GitHub Pages base path를 제거하는 함수
+const removeBasePath = (pathname: string): string => {
+	// GitHub Pages에서 /github1s/ base path 제거
+	if (pathname.startsWith('/github1s/')) {
+		return pathname.substring('/github1s'.length);
+	}
+	return pathname;
+};
+
 export const getCurrentRepo = memorize(() => {
 	return getBrowserUrl().then((browserUrl: string) => {
 		const pathParts = vscode.Uri.parse(browserUrl).path.split('/').filter(Boolean);
-		return pathParts.length >= 2 ? (pathParts.slice(0, 2) as [string, string]).join('/') : DEFAULT_REPO;
+		// GitHub Pages base path 제거
+		const cleanPathParts = removeBasePath(vscode.Uri.parse(browserUrl).path).split('/').filter(Boolean);
+		return cleanPathParts.length >= 2 ? (cleanPathParts.slice(0, 2) as [string, string]).join('/') : DEFAULT_REPO;
 	});
 });
 
@@ -26,7 +37,8 @@ export const getDefaultBranch = async (repo: string): Promise<string> => {
 };
 
 const parseTreeUrl = async (path: string): Promise<RouterState> => {
-	const pathParts = parsePath(path).pathname!.split('/').filter(Boolean);
+	const pathname = removeBasePath(parsePath(path).pathname!);
+	const pathParts = pathname.split('/').filter(Boolean);
 	const [owner, repo, _pageType, ...restParts] = pathParts;
 	const repoFullName = `${owner}/${repo}`;
 	const dataSource = GitHub1sDataSource.getInstance();
@@ -57,7 +69,8 @@ const parseBlobUrl = async (path: string): Promise<RouterState> => {
 };
 
 const parseCommitsUrl = async (path: string): Promise<RouterState> => {
-	const pathParts = parsePath(path).pathname!.split('/').filter(Boolean);
+	const pathname = removeBasePath(parsePath(path).pathname!);
+	const pathParts = pathname.split('/').filter(Boolean);
 	const [owner, repo, _pageType, ...refParts] = pathParts;
 
 	return {
@@ -68,7 +81,8 @@ const parseCommitsUrl = async (path: string): Promise<RouterState> => {
 };
 
 const parseCommitUrl = async (path: string): Promise<RouterState> => {
-	const pathParts = parsePath(path).pathname!.split('/').filter(Boolean);
+	const pathname = removeBasePath(parsePath(path).pathname!);
+	const pathParts = pathname.split('/').filter(Boolean);
 	const [owner, repo, _pageType, ...refParts] = pathParts;
 	const commitSha = refParts.join('/');
 
@@ -76,7 +90,9 @@ const parseCommitUrl = async (path: string): Promise<RouterState> => {
 };
 
 const parsePullsUrl = async (path: string): Promise<RouterState> => {
-	const [owner, repo] = parsePath(path).pathname!.split('/').filter(Boolean);
+	const pathname = removeBasePath(parsePath(path).pathname!);
+	const pathParts = pathname.split('/').filter(Boolean);
+	const [owner, repo] = pathParts;
 
 	return {
 		repo: `${owner}/${repo}`,
@@ -86,7 +102,8 @@ const parsePullsUrl = async (path: string): Promise<RouterState> => {
 };
 
 const parsePullUrl = async (path: string): Promise<RouterState> => {
-	const pathParts = parsePath(path).pathname!.split('/').filter(Boolean);
+	const pathname = removeBasePath(parsePath(path).pathname!);
+	const pathParts = pathname.split('/').filter(Boolean);
 	const [owner, repo, _pageType, codeReviewId] = pathParts;
 	const repoFullName = `${owner}/${repo}`;
 	const codeReview = await GitHub1sDataSource.getInstance().provideCodeReview(repoFullName, codeReviewId);
@@ -101,7 +118,8 @@ const parsePullUrl = async (path: string): Promise<RouterState> => {
 
 const parseSearchUrl = async (path: string): Promise<RouterState> => {
 	const { pathname, search } = parsePath(path);
-	const pathParts = pathname!.split('/').filter(Boolean);
+	const cleanPathname = removeBasePath(pathname!);
+	const pathParts = cleanPathname.split('/').filter(Boolean);
 	const [owner, repo, _pageType] = pathParts;
 	const queryOptions = queryString.parse(search || '');
 	const query = typeof queryOptions.q === 'string' ? queryOptions.q : '';
@@ -135,7 +153,8 @@ const PAGE_TYPE_MAP = {
 };
 
 export const parseGitHubPath = async (path: string): Promise<RouterState> => {
-	const pathParts = parsePath(path).pathname?.split('/').filter(Boolean) || [];
+	const pathname = removeBasePath(parsePath(path).pathname!);
+	const pathParts = pathname.split('/').filter(Boolean);
 	// detect concrete PageType the *third part* in url.path
 	const pageType = pathParts[2] ? PAGE_TYPE_MAP[pathParts[2]] || PageType.Unknown : PageType.Tree;
 

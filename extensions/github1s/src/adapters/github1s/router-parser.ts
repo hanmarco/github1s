@@ -4,8 +4,22 @@
  */
 
 import { joinPath } from '@/helpers/util';
+import { getBrowserUrl } from '@/helpers/context';
 import * as adapterTypes from '../types';
 import { parseGitHubPath } from './parse-path';
+
+// GitHub Pages base path를 추가하는 함수
+const addBasePath = async (path: string): Promise<string> => {
+	try {
+		const browserUrl = (await getBrowserUrl()) as string;
+		if (browserUrl.includes('/github1s/')) {
+			return `/github1s${path}`;
+		}
+	} catch (error) {
+		// 에러 발생 시 기본 경로 반환
+	}
+	return path;
+};
 
 export class GitHub1sRouterParser extends adapterTypes.RouterParser {
 	protected static instance: GitHub1sRouterParser | null = null;
@@ -21,29 +35,41 @@ export class GitHub1sRouterParser extends adapterTypes.RouterParser {
 		return parseGitHubPath(path);
 	}
 
-	buildTreePath(repo: string, ref?: string, filePath?: string): string {
-		return ref ? (filePath ? `/${repo}/tree/${ref}/${filePath}` : `/${repo}/tree/${ref}`) : `/${repo}`;
+	async buildTreePath(repo: string, ref?: string, filePath?: string): Promise<string> {
+		const path = ref ? (filePath ? `/${repo}/tree/${ref}/${filePath}` : `/${repo}/tree/${ref}`) : `/${repo}`;
+		return addBasePath(path);
 	}
 
-	buildBlobPath(repo: string, ref: string, filePath: string, startLine?: number, endLine?: number): string {
+	async buildBlobPath(
+		repo: string,
+		ref: string,
+		filePath: string,
+		startLine?: number,
+		endLine?: number,
+	): Promise<string> {
 		const hash = startLine ? (endLine ? `#L${startLine}-L${endLine}` : `#L${startLine}`) : '';
-		return `/${repo}/blob/${ref}/${filePath}${hash}`;
+		const path = `/${repo}/blob/${ref}/${filePath}${hash}`;
+		return addBasePath(path);
 	}
 
-	buildCommitListPath(repo: string): string {
-		return `/${repo}/commits`;
+	async buildCommitListPath(repo: string): Promise<string> {
+		const path = `/${repo}/commits`;
+		return addBasePath(path);
 	}
 
-	buildCommitPath(repo: string, commitSha: string): string {
-		return `/${repo}/commit/${commitSha}`;
+	async buildCommitPath(repo: string, commitSha: string): Promise<string> {
+		const path = `/${repo}/commit/${commitSha}`;
+		return addBasePath(path);
 	}
 
-	buildCodeReviewListPath(repo: string): string {
-		return `/${repo}/pulls`;
+	async buildCodeReviewListPath(repo: string): Promise<string> {
+		const path = `/${repo}/pulls`;
+		return addBasePath(path);
 	}
 
-	buildCodeReviewPath(repo: string, codeReviewId: string): string {
-		return `/${repo}/pull/${codeReviewId}`;
+	async buildCodeReviewPath(repo: string, codeReviewId: string): Promise<string> {
+		const path = `/${repo}/pull/${codeReviewId}`;
+		return addBasePath(path);
 	}
 
 	buildExternalLink(path: string): string {
