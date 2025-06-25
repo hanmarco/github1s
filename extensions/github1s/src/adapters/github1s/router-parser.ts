@@ -90,6 +90,15 @@ export class GitHub1sRouterParser extends adapterTypes.RouterParser {
 		if (path.startsWith('/github1s/')) {
 			cleanPath = path.substring('/github1s'.length);
 		}
-		return joinPath(GITHUB_ORIGIN, cleanPath);
+
+		// GITHUB_ORIGIN에서 github1s 경로 제거
+		let cleanOrigin = GITHUB_ORIGIN;
+		if (cleanOrigin.endsWith('/github1s/')) {
+			cleanOrigin = cleanOrigin.substring(0, cleanOrigin.length - '/github1s/'.length);
+		} else if (cleanOrigin.endsWith('/github1s')) {
+			cleanOrigin = cleanOrigin.substring(0, cleanOrigin.length - '/github1s'.length);
+		}
+
+		return joinPath(cleanOrigin, cleanPath);
 	}
 }
