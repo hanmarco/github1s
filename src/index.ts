@@ -11,7 +11,12 @@ import { createVSCodeWebConfig, createWorkbenchOptions, Platform } from './confi
 
 const resolvePlatformState = (): [Platform, string] => {
 	const hostname = window.location.hostname;
-	const pathParts = window.location.pathname.split('/').filter(Boolean);
+	let pathParts = window.location.pathname.split('/').filter(Boolean);
+
+	// GitHub Pages에서 base path 제거
+	if (hostname === 'hanmarco.github.io' && pathParts[0] === 'github1s') {
+		pathParts = pathParts.slice(1); // 'github1s' 제거
+	}
 
 	if (hostname.match(/^(.*\.)?gitlab1s\.com$/i)) {
 		const dashIndex = pathParts.indexOf('-');
