@@ -17,7 +17,13 @@ const openGitHub1sPage = () => {
 };
 
 const openOfficialPage = (origin: string) => {
-	const targetPath = window.location.pathname + window.location.search + window.location.hash;
+	let targetPath = window.location.pathname + window.location.search + window.location.hash;
+
+	// GitHub Pages에서 base path 제거
+	if (window.location.hostname === 'hanmarco.github.io' && targetPath.startsWith('/github1s/')) {
+		targetPath = targetPath.replace('/github1s', '');
+	}
+
 	return window.open(origin + targetPath, '_blank');
 };
 
