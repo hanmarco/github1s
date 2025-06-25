@@ -10,14 +10,22 @@ import { parseGitHubPath } from './parse-path';
 
 // GitHub Pages base path를 추가하는 함수
 const addBasePath = async (path: string): Promise<string> => {
+	console.log('🔧 addBasePath called with:', path);
 	try {
 		const browserUrl = (await getBrowserUrl()) as string;
+		console.log('🌐 Browser URL:', browserUrl);
 		if (browserUrl.includes('/github1s/')) {
-			return `/github1s${path}`;
+			const result = `/github1s${path}`;
+			console.log('✅ Adding base path, result:', result);
+			return result;
+		} else {
+			console.log('❌ No base path needed, returning:', path);
 		}
 	} catch (error) {
+		console.log('⚠️ Error in addBasePath:', error);
 		// 에러 발생 시 기본 경로 반환
 	}
+	console.log('📤 Final path:', path);
 	return path;
 };
 
@@ -36,8 +44,12 @@ export class GitHub1sRouterParser extends adapterTypes.RouterParser {
 	}
 
 	async buildTreePath(repo: string, ref?: string, filePath?: string): Promise<string> {
+		console.log('🏗️ buildTreePath called with:', { repo, ref, filePath });
 		const path = ref ? (filePath ? `/${repo}/tree/${ref}/${filePath}` : `/${repo}/tree/${ref}`) : `/${repo}`;
-		return addBasePath(path);
+		console.log('🔨 Generated path:', path);
+		const result = await addBasePath(path);
+		console.log('🎯 Final buildTreePath result:', result);
+		return result;
 	}
 
 	async buildBlobPath(
