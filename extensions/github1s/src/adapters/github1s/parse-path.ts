@@ -155,6 +155,23 @@ const PAGE_TYPE_MAP = {
 export const parseGitHubPath = async (path: string): Promise<RouterState> => {
 	const pathname = removeBasePath(parsePath(path).pathname!);
 	const pathParts = pathname.split('/').filter(Boolean);
+
+	// GitHub Pages에서 저장소 경로 처리
+	// /hanmarco/wd 형태의 경로는 저장소 경로로 처리
+	if (pathParts.length === 2) {
+		const [owner, repo] = pathParts;
+		const repoFullName = `${owner}/${repo}`;
+		const dataSource = GitHub1sDataSource.getInstance();
+		const { ref, path: filePath } = await dataSource.extractRefPath(repoFullName, '');
+
+		return {
+			pageType: PageType.Tree,
+			repo: repoFullName,
+			ref,
+			filePath: '',
+		};
+	}
+
 	// detect concrete PageType the *third part* in url.path
 	const pageType = pathParts[2] ? PAGE_TYPE_MAP[pathParts[2]] || PageType.Unknown : PageType.Tree;
 
