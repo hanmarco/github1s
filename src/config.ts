@@ -112,7 +112,10 @@ export const createVSCodeWebConfig = (platform: Platform, repository: string): a
 		logo: {
 			title: 'Open on GitHub',
 			icon: githubLogoUrl,
-			onClick: () => (repository ? openOfficialPage(GITHUB_ORIGIN) : openGitHub1sPage()),
+			onClick: () => (
+				console.log('🔍 onClick called with:', GITHUB_ORIGIN),
+				repository ? openOfficialPage(GITHUB_ORIGIN) : openGitHub1sPage()
+			),
 		},
 	};
 };
