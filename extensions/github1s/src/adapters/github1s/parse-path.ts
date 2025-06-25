@@ -156,11 +156,22 @@ export const parseGitHubPath = async (path: string): Promise<RouterState> => {
 	const pathname = removeBasePath(parsePath(path).pathname!);
 	const pathParts = pathname.split('/').filter(Boolean);
 
+	// 디버그 로그 추가
+	console.log('=== GitHub1s Path Debug ===');
+	console.log('Original path:', path);
+	console.log('Pathname after removeBasePath:', pathname);
+	console.log('PathParts length:', pathParts.length);
+	console.table(pathParts);
+	console.log('PathParts:', pathParts);
+	console.log('==========================');
+
 	// GitHub Pages에서 저장소 경로 처리
 	// /hanmarco/wd 형태의 경로는 저장소 경로로 처리
 	if (pathParts.length === 2) {
+		console.log('✅ Processing as repository path (length === 2)');
 		const [owner, repo] = pathParts;
 		const repoFullName = `${owner}/${repo}`;
+		console.log('Owner:', owner, 'Repo:', repo, 'FullName:', repoFullName);
 		const dataSource = GitHub1sDataSource.getInstance();
 		const { ref, path: filePath } = await dataSource.extractRefPath(repoFullName, '');
 
@@ -174,6 +185,7 @@ export const parseGitHubPath = async (path: string): Promise<RouterState> => {
 
 	// detect concrete PageType the *third part* in url.path
 	const pageType = pathParts[2] ? PAGE_TYPE_MAP[pathParts[2]] || PageType.Unknown : PageType.Tree;
+	console.log('PageType detected:', pageType, 'from pathParts[2]:', pathParts[2]);
 
 	if (pathParts.length >= 2) {
 		switch (pageType) {
@@ -196,6 +208,7 @@ export const parseGitHubPath = async (path: string): Promise<RouterState> => {
 	}
 
 	// fallback to default
+	console.log('⚠️ Falling back to default repository');
 	return {
 		repo: DEFAULT_REPO,
 		ref: await getDefaultBranch(DEFAULT_REPO),
