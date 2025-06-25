@@ -85,6 +85,11 @@ export class GitHub1sRouterParser extends adapterTypes.RouterParser {
 	}
 
 	buildExternalLink(path: string): string {
-		return joinPath(GITHUB_ORIGIN, path);
+		// GitHub Pages에서 base path 제거
+		let cleanPath = path;
+		if (path.startsWith('/github1s/')) {
+			cleanPath = path.substring('/github1s'.length);
+		}
+		return joinPath(GITHUB_ORIGIN, cleanPath);
 	}
 }
