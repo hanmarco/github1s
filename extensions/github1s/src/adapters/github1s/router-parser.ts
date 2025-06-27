@@ -4,21 +4,11 @@
  */
 
 import { joinPath } from '@/helpers/util';
-import { getBrowserUrl } from '@/helpers/context';
 import * as adapterTypes from '../types';
 import { parseGitHubPath } from './parse-path';
 
-// GitHub Pages base path를 추가하는 함수
-const addBasePath = async (path: string): Promise<string> => {
-	try {
-		const browserUrl = (await getBrowserUrl()) as string;
-		if (browserUrl.includes('/github1s/')) {
-			return `/github1s${path}`;
-		}
-	} catch (error) {
-		// 에러 발생 시 기본 경로 반환
-	}
-	return path;
+const addBasePath = (path: string): string => {
+	return joinPath(BASE_PATH, path);
 };
 
 export class GitHub1sRouterParser extends adapterTypes.RouterParser {
@@ -35,39 +25,33 @@ export class GitHub1sRouterParser extends adapterTypes.RouterParser {
 		return parseGitHubPath(path);
 	}
 
-	async buildTreePath(repo: string, ref?: string, filePath?: string): Promise<string> {
+	buildTreePath(repo: string, ref?: string, filePath?: string): string {
 		const path = ref ? (filePath ? `/${repo}/tree/${ref}/${filePath}` : `/${repo}/tree/${ref}`) : `/${repo}`;
 		return addBasePath(path);
 	}
 
-	async buildBlobPath(
-		repo: string,
-		ref: string,
-		filePath: string,
-		startLine?: number,
-		endLine?: number,
-	): Promise<string> {
+	buildBlobPath(repo: string, ref: string, filePath: string, startLine?: number, endLine?: number): string {
 		const hash = startLine ? (endLine ? `#L${startLine}-L${endLine}` : `#L${startLine}`) : '';
 		const path = `/${repo}/blob/${ref}/${filePath}${hash}`;
 		return addBasePath(path);
 	}
 
-	async buildCommitListPath(repo: string): Promise<string> {
+	buildCommitListPath(repo: string): string {
 		const path = `/${repo}/commits`;
 		return addBasePath(path);
 	}
 
-	async buildCommitPath(repo: string, commitSha: string): Promise<string> {
+	buildCommitPath(repo: string, commitSha: string): string {
 		const path = `/${repo}/commit/${commitSha}`;
 		return addBasePath(path);
 	}
 
-	async buildCodeReviewListPath(repo: string): Promise<string> {
+	buildCodeReviewListPath(repo: string): string {
 		const path = `/${repo}/pulls`;
 		return addBasePath(path);
 	}
 
-	async buildCodeReviewPath(repo: string, codeReviewId: string): Promise<string> {
+	buildCodeReviewPath(repo: string, codeReviewId: string): string {
 		const path = `/${repo}/pull/${codeReviewId}`;
 		return addBasePath(path);
 	}

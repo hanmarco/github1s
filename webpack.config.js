@@ -50,8 +50,9 @@ export default (env, argv) => {
 	const minifyJS = (code) => (devMode ? code : UglifyJS.minify(code).code);
 	const availableLanguages = devVscode ? [] : fs.readdirSync(path.join(vscodeWebPath, 'nls'));
 
-	// GitHub Pages를 위한 publicPath 설정
-	const publicPath = process.env.PUBLIC_URL || (process.env.NODE_ENV === 'production' ? '/github1s/' : '/');
+	// GitHub Pages를 위한 publicPath 설정. PUBLIC_URL 환경 변수를 사용하여 설정할 수 있습니다.
+	// 예: PUBLIC_URL=/sub/dir/ npm yarn build
+	const publicPath = process.env.PUBLIC_URL || '/';
 
 	return {
 		mode: env.mode || 'production',
@@ -94,6 +95,7 @@ export default (env, argv) => {
 				GITLAB_ORIGIN: JSON.stringify(process.env.GITLAB_DOMAIN || 'https://gitlab.com'),
 				GITHUB1S_EXTENSIONS: JSON.stringify(packUtils.getBuiltinExtensions(devVscode)),
 				AVAILABLE_LANGUAGES: JSON.stringify(availableLanguages),
+				BASE_PATH: JSON.stringify(publicPath),
 				// GitHub Pages에서 Service Worker 비활성화
 				DISABLE_SERVICE_WORKER: JSON.stringify(process.env.NODE_ENV === 'production'),
 			}),
