@@ -34,7 +34,7 @@ jobs:
         run: npm run build:samsung-pages
         env:
           NODE_ENV: production
-          PUBLIC_URL: /github1s/
+          PUBLIC_URL: /sss-han/github1s/
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
