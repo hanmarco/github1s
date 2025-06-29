@@ -3,12 +3,90 @@
 <head>
     <meta charset="utf-8">
     <title>Page Not Found</title>
+    <script src="/github1s/oauth-config.js"></script>
     <script>
         // Service Worker 요청 처리
         if (window.location.pathname.includes('service-worker.js')) {
             // Service Worker를 비활성화하고 빈 응답 반환
             window.location.href = '/';
             return;
+        }
+        
+        // GitHub OAuth callback API 처리
+        if (window.location.pathname.includes('/api/github-auth-callback')) {
+            const urlParams = new URLSearchParams(window.location.search);
+            const code = urlParams.get('code');
+            const error = urlParams.get('error');
+            
+            if (code) {
+                // OAuth 토큰 교환 처리
+                const tokenExchange = async () => {
+                    try {
+                        const config = window.OAUTH_CONFIG || {};
+                        // GitHub Enterprise OAuth 토큰 교환
+                        const response = await fetch(`${config.GITHUB_ORIGIN}/login/oauth/access_token`, {
+                            method: 'POST',
+                            headers: {
+                                'Accept': 'application/json',
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify({
+                                client_id: config.GITHUB_CLIENT_ID,
+                                client_secret: config.GITHUB_CLIENT_SECRET,
+                                code: code,
+                                redirect_uri: config.REDIRECT_URI
+                            })
+                        });
+                        
+                        const result = await response.json();
+                        
+                        if (result.access_token) {
+                            // 성공적으로 토큰을 받았을 때
+                            const message = { type: 'authorizing', payload: result };
+                            if (window.opener) {
+                                window.opener.postMessage(message, window.location.origin);
+                                setTimeout(() => window.close(), 100);
+                            } else {
+                                window.location.href = '/github1s/';
+                            }
+                        } else {
+                            // 토큰 교환 실패
+                            const errorMessage = { type: 'authorizing', payload: { error: 'token_exchange_failed', error_description: result.error_description || 'Failed to exchange token' } };
+                            if (window.opener) {
+                                window.opener.postMessage(errorMessage, window.location.origin);
+                                setTimeout(() => window.close(), 100);
+                            } else {
+                                window.location.href = '/github1s/';
+                            }
+                        }
+                    } catch (err) {
+                        // 네트워크 에러 등
+                        const errorMessage = { type: 'authorizing', payload: { error: 'network_error', error_description: 'Network error during token exchange' } };
+                        if (window.opener) {
+                            window.opener.postMessage(errorMessage, window.location.origin);
+                            setTimeout(() => window.close(), 100);
+                        } else {
+                            window.location.href = '/github1s/';
+                        }
+                    }
+                };
+                
+                tokenExchange();
+                return;
+            } else if (error) {
+                // OAuth 에러 처리
+                const result = { type: 'authorizing', payload: { error: error } };
+                if (window.opener) {
+                    window.opener.postMessage(result, window.location.origin);
+                    setTimeout(() => window.close(), 100);
+                } else {
+                    window.location.href = '/github1s/';
+                }
+                return;
+            } else {
+                window.location.href = '/github1s/';
+                return;
+            }
         }
         
         // GitHub Pages에서 SPA 라우팅 처리

@@ -57,7 +57,7 @@ export const onRequest: PagesFunction<{
 
 	try {
 		// https://docs.github.com/en/developers/apps/authorizing-oauth-apps#2-users-are-redirected-back-to-your-site-by-github
-		const response = await fetch('https://github.com/login/oauth/access_token', {
+		const response = await fetch('https://github.sec.samsung.net/login/oauth/access_token', {
 			method: 'POST',
 			body: JSON.stringify({ client_id: env.GITHUB_OAUTH_ID, client_secret: env.GITHUB_OAUTH_SECRET, code }),
 			headers: { accept: 'application/json', 'content-type': 'application/json' },

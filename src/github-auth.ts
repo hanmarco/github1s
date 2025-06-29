@@ -4,11 +4,12 @@
  */
 
 const CLIENT_ID = 'eae6621348403ea49103';
-const GITHUB_ORIGIN = 'https://github.com';
-const GITHUB_AUTH_URL = `${GITHUB_ORIGIN}/login/oauth/authorize?scope=repo,user:email&client_id=${CLIENT_ID}`;
+const GITHUB_ORIGIN = 'https://github.sec.samsung.net';
+const REDIRECT_URI = 'https://pages.github.sec.samsung.net/sss-han/github1s/api/github-auth-callback';
+const GITHUB_AUTH_URL = `${GITHUB_ORIGIN}/login/oauth/authorize?scope=repo,user:email&client_id=${CLIENT_ID}&redirect_uri=${encodeURIComponent(REDIRECT_URI)}`;
 const OPEN_WINDOW_FEATURES =
 	'directories=no,titlebar=no,toolbar=no,location=no,status=no,menubar=no,scrollbars=no,resizable=no,width=800,height=520,top=150,left=150';
-const AUTH_PAGE_ORIGIN = 'https://auth.github1s.com';
+const AUTH_PAGE_ORIGIN = 'https://pages.github.sec.samsung.net';
 
 export const timeout = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
